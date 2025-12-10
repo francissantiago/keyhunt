@@ -61,8 +61,10 @@ endif
 # MinGW-specific flags (used by target `mingw`)
 CFLAGS_MINGW := -m64 -march=x86-64 -mssse3 -Wall -Wextra -Wno-unused-parameter -Ofast -ftree-vectorize
 CXXFLAGS_MINGW := -m64 -march=x86-64 -mssse3 -Wall -Wextra -Wno-deprecated-copy -Ofast -ftree-vectorize
-LDFLAGS_MINGW := -lm -lws2_32 -lbcrypt
-THREAD_FLAGS_MINGW := -pthread
+# Link libgcc and libstdc++ statically so exe doesn't require libgcc_s_seh-1.dll or libstdc++-6.dll
+LDFLAGS_MINGW := -static-libgcc -static-libstdc++ -lm -lws2_32 -lbcrypt
+# Do not request pthread linkage for MinGW build (avoid libwinpthread dependency)
+THREAD_FLAGS_MINGW :=
 
 default:
 	g++ -m64 -march=native -mtune=native -mssse3 -Wall -Wextra -Wno-deprecated-copy -Ofast -ftree-vectorize -flto -c oldbloom/bloom.cpp -o oldbloom.o
