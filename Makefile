@@ -62,7 +62,9 @@ endif
 CFLAGS_MINGW := -m64 -march=x86-64 -mssse3 -Wall -Wextra -Wno-unused-parameter -Ofast -ftree-vectorize
 CXXFLAGS_MINGW := -m64 -march=x86-64 -mssse3 -Wall -Wextra -Wno-deprecated-copy -Ofast -ftree-vectorize
 # Link libgcc and libstdc++ statically so exe doesn't require libgcc_s_seh-1.dll or libstdc++-6.dll
-LDFLAGS_MINGW := -static-libgcc -static-libstdc++ -lm -lws2_32 -lbcrypt
+# Link libgcc and libstdc++ statically and link winpthread statically to avoid libwinpthread-1.dll
+# Use -Wl,-Bstatic/-Bdynamic around -lwinpthread so other system libs remain dynamic
+LDFLAGS_MINGW := -static-libgcc -static-libstdc++ -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic -lm -lws2_32 -lbcrypt
 # Do not request pthread linkage for MinGW build (avoid libwinpthread dependency)
 THREAD_FLAGS_MINGW :=
 
